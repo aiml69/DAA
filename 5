@@ -1,0 +1,40 @@
+#include <stdio.h>  
+#include <stdlib.h>  
+#define MAX 100  
+ 
+int graph[MAX][MAX], visited[MAX], stack[MAX], top = -1, n;  
+ 
+void topoSortDFS(int v) {  
+visited[v] = 1;  
+for (int i = 0; i < n; i++) {  
+if (graph[v][i] && !visited[i]) {  
+topoSortDFS(i);  
+        }  
+    }  
+    stack[++top] = v;  
+}  
+  
+void topologicalSort() {  
+    for (int i = 0; i < n; i++) visited[i] = 0;  
+    for (int i = 0; i < n; i++) {  
+        if (!visited[i]) {  
+            topoSortDFS(i);  
+        }  
+    }  
+    printf("Topological Order: ");  
+    while (top != -1) {  
+        printf("%d ", stack[top--]);  
+    }  
+    printf("\n");  
+}  
+  
+int main() {  
+    printf("Enter number of vertices: ");  
+    scanf("%d", &n);  
+    printf("Enter adjacency matrix (0/1):\n");  
+    for (int i = 0; i < n; i++)  
+        for (int j = 0; j < n; j++)  
+            scanf("%d", &graph[i][j]);  
+topologicalSort();  
+return 0;  
+} 
