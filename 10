@@ -1,0 +1,110 @@
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <limits.h>  
+#define MAX 100  
+ 
+int parent[MAX], visited[MAX], graph[MAX][MAX], n;  
+  
+struct Edge {  
+    int u, v, w;  
+} edgeList[MAX];  
+  
+int find(int i) {  
+    while (i != parent[i]) i = parent[i];  
+    return i;  
+}  
+  
+void unionSet(int i, int j) {  
+    int a = find(i);  
+    int b = find(j);  
+    parent[a] = b;  
+}  
+  
+void kruskal(int e) {  
+    int cost = 0;  
+    printf("\n--- Kruskal's MST ---\nEdges:\n");  
+    for (int i = 0; i < e; i++) {  
+        int u = edgeList[i].u;  
+        int v = edgeList[i].v;  
+        int w = edgeList[i].w;  
+        if (find(u) != find(v)) {  
+            unionSet(u, v);  
+            printf("%d -- %d == %d\n", u, v, w);  
+            cost += w;  
+        }  
+    }  
+    printf("Total cost of Kruskal's MST: %d\n", cost);  
+}  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+13 | Page 
+ 
+void prim() {  
+    for (int i = 0; i < n; i++) visited[i] = 0;  
+    int edgeCount = 0, totalCost = 0;  
+    visited[0] = 1;  
+    printf("\n--- Prim's MST ---\nEdges:\n");  
+    while (edgeCount < n - 1) {  
+        int min = INT_MAX, u = -1, v = -1;  
+        for (int i = 0; i < n; i++) {  
+            if (visited[i]) {  
+                for (int j = 0; j < n; j++) {  
+                    if (!visited[j] && graph[i][j] && graph[i][j] < min) {  
+                        min = graph[i][j];  
+                        u = i;  
+                        v = j;  
+                    }  
+                }  
+            }  
+        }  
+        if (u != -1 && v != -1) {  
+            printf("%d -- %d == %d\n", u, v, graph[u][v]);  
+            totalCost += graph[u][v];  
+            visited[v] = 1;  
+            edgeCount++;  
+        }  
+    }  
+    printf("Total cost of Prim's MST: %d\n", totalCost);  
+}  
+  
+int main() {  
+    int e;  
+    printf("Enter number of vertices: ");  
+    scanf("%d", &n);  
+    // Input for Kruskal  
+    printf("Enter number of edges: ");  
+    scanf("%d", &e);  
+    printf("Enter edges (u v weight):\n");  
+    for (int i = 0; i < e; i++) {  
+        scanf("%d %d %d", &edgeList[i].u, &edgeList[i].v, &edgeList[i].w);  
+    }  
+    for (int i = 0; i < n; i++) parent[i] = i;  
+    // Sort edges  
+    for (int i = 0; i < e - 1; i++) {  
+        for (int j = i + 1; j < e; j++) {  
+            if (edgeList[i].w > edgeList[j].w) {  
+                struct Edge temp = edgeList[i];  
+                edgeList[i] = edgeList[j];  
+                edgeList[j] = temp;  
+14 | Page 
+ 
+            }  
+        }  
+    }  
+  
+    // Input for Prim  
+    printf("Enter the adjacency matrix for Prim's algorithm:\n");  
+    for (int i = 0; i < n; i++)  
+        for (int j = 0; j < n; j++)  
+            scanf("%d", &graph[i][j]);  
+  
+    kruskal(e);  
+    prim();  
+  
+    return 0;  
+}
